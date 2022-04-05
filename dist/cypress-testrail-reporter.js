@@ -34,7 +34,12 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
         _this.validate(reporterOptions, 'suiteId');
         runner.on('start', function () {
             var executionDateTime = moment().format('MMM Do YYYY, HH:mm (Z)');
+           if (process.env.CYPRESS_TESTRAIL_REPORTER_BROWSER === undefined) {
             var name = (reporterOptions.runName || 'Automated test run') + " " + executionDateTime;
+            }
+            else {
+            var name = (reporterOptions.runName || 'Automated test run') + " " + process.env.CYPRESS_TESTRAIL_REPORTER_BROWSER + " " + executionDateTime;
+            }
             var description = 'For the Cypress run visit https://dashboard.cypress.io/#/projects/runs';
             _this.testRail.createRun(name, description);
         });
