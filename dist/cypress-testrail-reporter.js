@@ -71,6 +71,19 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             }
             var _a;
         });
+        runner.on('pending', function (test) {
+            var caseIds = shared_1.titleToCaseIds(test.title);
+            if (caseIds.length > 0) {
+                var results = caseIds.map(function (caseId) {
+                    return {
+                        case_id: caseId,
+                        status_id: testrail_interface_1.Status.OutofScope,
+                    };
+                });
+                (_a = _this.results).push.apply(_a, results);
+            }
+            var _a;
+        });
         runner.on('end', function () {
             if (_this.results.length == 0) {
                 console.log('\n', chalk.magenta.underline.bold('(TestRail Reporter)'));
