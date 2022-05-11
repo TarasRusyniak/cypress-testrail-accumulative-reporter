@@ -7,5 +7,6 @@ var Status;
     Status[Status["Untested"] = 3] = "Untested";
     Status[Status["Retest"] = 4] = "Retest";
     Status[Status["Failed"] = 5] = "Failed";
+    Status[Status["OutofScope"] = 7] = "OutofScope";
 })(Status = exports.Status || (exports.Status = {}));
 //# sourceMappingURL=testrail.interface.js.map
