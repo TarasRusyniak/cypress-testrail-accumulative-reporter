@@ -34,7 +34,7 @@ export class CypressTestRailReporter extends reporters.Spec {
           return {
             case_id: caseId,
             status_id: Status.Passed,
-            comment: `Execution time: ${test.duration}ms`,
+            comment: `Execution time: ${test.duration}ms ${test.title}`,
           };
         });
         this.results.push(...results);
@@ -67,7 +67,7 @@ export class CypressTestRailReporter extends reporters.Spec {
         return;
       }
 
-      this.testRail.publishResults(this.results);
+      this.testRail.publishResults(this.results.sort((a,b) =>  (b.status_id - a.status_id)));
     });
   }
 

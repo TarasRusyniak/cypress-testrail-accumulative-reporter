@@ -50,7 +50,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
                     return {
                         case_id: caseId,
                         status_id: testrail_interface_1.Status.Passed,
-                        comment: "Execution time: " + test.duration + "ms",
+                        comment: "Execution time: " + test.duration + "ms "+test.title,
                     };
                 });
                 (_a = _this.results).push.apply(_a, results);

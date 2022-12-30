@@ -1,19 +1,19 @@
 {
-  "name": "cypress-testrail-accumulative-reporter",
-  "version": "1.1.4",
+  "name": "@tarasrusyniak/cypress-testrail-accumulative-reporter",
+  "version": "1.1.21",
   "description": "A Testrail reporter for cypress including TestRail API basic library",
   "main": "index.js",
   "private": false,
-  "keywords": ["cypress", "testrail", "reporter"],
-  "author": {
-    "name": "Milutin Savovic",
-    "email": "mickosavovic@gmail.com"
-  },
+  "keywords": [
+    "cypress",
+    "testrail",
+    "reporter"
+  ],
+  "author": "Milutin Savovic <mickosavovic@gmail.com>",
   "license": "MIT",
-  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Vivify-Ideas/cypress-testrail-reporter.git"
+    "url": "git+https://github.com/Vivify-Ideas/cypress-testrail-reporter.git"
   },
   "bugs": {
     "url": "https://github.com/Vivify-Ideas/cypress-testrail-reporter/issues"
@@ -24,7 +24,7 @@
     "build": "npm run clean && npm run tsc"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "btoa": "^1.1.2",
     "chalk": "^2.4.1",
     "mocha": "^2.2.5",
@@ -37,5 +37,6 @@
     "chai": "^3.5.0",
     "rimraf": "^2.5.4",
     "typescript": "^2.1.4"
-  }
+  },
+  "homepage": "https://github.com/Vivify-Ideas/cypress-testrail-reporter#readme"
 }
