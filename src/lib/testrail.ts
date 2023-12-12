@@ -25,7 +25,7 @@ export class TestRail {
     }).then(response => {
       console.log("Create run: "+JSON.stringify(response))
       console.log("Create run data: "+JSON.stringify(response.data))
-      this.ids=response.data.cases.filter(testcase => testcase.section_id != 26244&&testcase.section_id != 27496).map(testcase => testcase.id)
+      this.ids=response.data.cases.filter(testcase => testcase.section_id != 26244&&testcase.section_id != 27496&&(testcase.custom_automation_status==3||testcase.custom_automation_status==1||testcase.custom_automation_status==5)).map(testcase => testcase.id)
       axios({
         method: 'post',
         url: `${this.base}/add_run/${this.options.projectId}`,

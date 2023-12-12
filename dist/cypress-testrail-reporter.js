@@ -44,7 +44,16 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             _this.testRail.createRun(name, description);
         });
         runner.on('pass', function (test) {
+            let file = test.parent.parent.file;
+            let logObject = "";
+            if(test.parent.parent.ctx.logObject ){
+                logObject = test.parent.parent.ctx.logObject.join(", >> ");
+            }
+            file = file.split("/")[file.split("/").length-1];
+            //file =file.split("/")[file.split("/").length-2]+"/"+file.split("/")[file.split("/").length-1];
             var caseIds = shared_1.titleToCaseIds(test.title);
+            test.title=test.title+" https://output.circle-artifacts.com/output/job/"+process.env.CYPRESS_CIRCLE_WORKFLOW_JOB_ID+"/artifacts/0/cypress/videos/"+file+".mp4";
+
             if (caseIds.length > 0) {
                 var results = caseIds.map(function (caseId) {
                     return {
@@ -61,6 +70,13 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             var caseIds = shared_1.titleToCaseIds(test.title);
             if (caseIds.length > 0) {
                 var results = caseIds.map(function (caseId) {
+                    if((test.err.message+"").includes("<BLOCKED>")){
+                        return {
+                            case_id: caseId,
+                            status_id: testrail_interface_1.Status.Blocked,
+                            comment: "" + test.err.message,
+                        };
+                    }
                     return {
                         case_id: caseId,
                         status_id: testrail_interface_1.Status.Failed,
@@ -91,7 +107,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
                // _this.testRail.deleteRun();
                 return;
             }
-            _this.testRail.publishResults(_this.results);
+            _this.testRail.publishResults(_this.results.sort((a,b) =>  (a.status_id - b.status_id)));
         });
         return _this;
     }

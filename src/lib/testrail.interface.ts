@@ -6,6 +6,8 @@ export interface TestRailOptions {
   suiteId: number;
   groupId: number;
   assignedToId?: number;
+  excludedGroups?: string;
+  includedStatuses?: string;
 }
 
 export enum Status {

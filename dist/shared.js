@@ -16,4 +16,29 @@ function titleToCaseIds(title) {
     return caseIds;
 }
 exports.titleToCaseIds = titleToCaseIds;
+/**
+ * Split Groups
+ * @param groups
+ * @returns {any}
+ */
+function getExcludedGroups(excludedGroups) {
+    var groupIds = [];
+    if (excludedGroups){
+    groupIds = excludedGroups.split(",");}
+    return groupIds;
+}
+
+/**
+ * Split included statuses
+ * @param statuses
+ * @returns {any}
+ */
+function getIncludedStatuses(includedStatuses) {
+    var includedStatusesIds = [];
+    if (includedStatuses){
+        includedStatusesIds = includedStatuses.split(",");}
+    return includedStatusesIds;
+}
+exports.getIncludedStatuses = getIncludedStatuses;
+exports.getExcludedGroups = getExcludedGroups;
 //# sourceMappingURL=shared.js.map
