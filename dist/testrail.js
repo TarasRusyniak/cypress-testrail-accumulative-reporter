@@ -203,6 +203,27 @@ var TestRail = /** @class */ (function () {
             return console.error(error);
         });
     };
+
+    TestRail.prototype.submitResults = function (results) {
+        var _this = this;
+        axios({
+            method: 'post',
+            url: _this.base + "/add_results_for_cases/" + globalRunId,
+            headers: {'Content-Type': 'application/json'},
+            auth: {
+                username: this.options.username,
+                password: this.options.password,
+            },
+            data: JSON.stringify({results: results}),
+        })
+            .then(function (response) {
+                console.log('\n', chalk.magenta.underline.bold('(TestRail Reporter)'));
+                console.log('\n', " - Results are published to " + chalk.magenta("https://" + _this.options.domain + "/index.php?/runs/view/" + globalRunId), '\n');
+            })
+            .catch(function (error) {
+                return console.error(error);
+            });
+    }
     TestRail.prototype.publishResults = function (results) {
 
         var _this = this;
@@ -210,71 +231,64 @@ var TestRail = /** @class */ (function () {
         bodyFormData.append('name', _this.options.username);
         bodyFormData.append('password', _this.options.password);
         bodyFormData.append('rememberme', 1);
-        client.post(
-            "https://" + _this.options.domain + "/index.php?/auth/login/",
-            bodyFormData,
-            {
-                headers: { "Content-Type": "multipart/form-data" },
-                jar: cookieJar,
-                withCredentials: true
-            }
-        )
-            .then(function (response) {
-                console.log('cookie 123' +JSON.stringify(response.headers))
-                return client.get( "https://" + _this.options.domain + "/index.php?/cases/defects/"+(results[0].case_id),{
+        if (results.some((element) => element.status_id === 5)) {
+
+            client.post(
+                "https://" + _this.options.domain + "/index.php?/auth/login/",
+                bodyFormData,
+                {
+                    headers: {"Content-Type": "multipart/form-data"},
                     jar: cookieJar,
                     withCredentials: true
-                })
-            }).then(
-            function (response2){
-                debugger
-                console.log("results 123: "+JSON.stringify(results))
-                // console.log('defects 123' +response2.data)
-                var re = new RegExp(".*defectLink.*rel=\"([-a-zA-Z0-9]+)\".*","g");
-                var s = response2.data;
-                var m;
-                // const matches = response2.data.matchAll(re);
-                //
-                // for (const match of matches) {
-                //     console.log("Match 123: "+match);
-                //     console.log("Match 123: "+match.index);
-                // }
-
-                do {
-                    m = re.exec(s);
-                    if (m) {
-                        console.log("results 123: "+JSON.stringify(results))
-                        // console.log("Match");
-                        console.log(m[1]);
-                        results[0].status_id=6;
-                        results[0].comment="[Defect:"+m[1]+"]"+results[0].comment;
-                    }else{
-                        console.log("no Matches found in text");
-                    }
-                } while (m);
-                axios({
-                    method: 'post',
-                    url: _this.base + "/add_results_for_cases/" + globalRunId,
-                    headers: {'Content-Type': 'application/json'},
-                    auth: {
-                        username: _this.options.username,
-                        password: _this.options.password,
-                    },
-                    data: JSON.stringify({results: results}),
-                })
-                    .then(function (response) {
-                        console.log('\n', chalk.magenta.underline.bold('(TestRail Reporter)'));
-                        console.log('\n', " - Results are published to " + chalk.magenta("https://" + _this.options.domain + "/index.php?/runs/view/" + globalRunId), '\n');
+                }
+            )
+                .then(function (response) {
+                    console.log('cookie 123' + JSON.stringify(response.headers))
+                    return client.get("https://" + _this.options.domain + "/index.php?/cases/defects/" + (results[0].case_id), {
+                        jar: cookieJar,
+                        withCredentials: true
                     })
-                    .catch(function (error) {
-                        return console.error(error);
+                }).then(
+                function (response2) {
+                    debugger
+                    console.log("results 123: " + JSON.stringify(results))
+                    // console.log('defects 123' +response2.data)
+                    var re = new RegExp(".*defectLink.*rel=\"([-a-zA-Z0-9]+)\".*", "g");
+                    var s = response2.data;
+                    var m;
+                    // const matches = response2.data.matchAll(re);
+                    //
+                    // for (const match of matches) {
+                    //     console.log("Match 123: "+match);
+                    //     console.log("Match 123: "+match.index);
+                    // }
+                    results.forEach((element) => {console.log(element);
+
+                        if (element.status_id===5){
+                            do {
+                                m = re.exec(s);
+                                if (m) {
+                                    console.log("results 123: " + JSON.stringify(results))
+                                    // console.log("Match");
+                                    console.log(m[1]);
+                                    element.status_id = 6;
+                                    element.comment = "[Defect:" + m[1] + "]" + element.comment;
+                                } else {
+                                    console.log("no Matches found in text");
+                                }
+                            } while (m);}
                     });
-            }
-        )
-            .catch(function (response) {
-                //handle error
-                console.log(response);
-            });
+                    _this.submitResults(results);
+                    //submit
+                }
+            )
+                .catch(function (response) {
+                    //handle error
+                    console.log(response);
+                });
+        }else{
+            _this.submitResults(results);
+        }
 
 
     };
